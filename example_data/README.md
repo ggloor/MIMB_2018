@@ -9,3 +9,6 @@ The primary comparison of these data are BV status (by Nugent scoring).
 The counts table contains 8 samples (columns) total, with the number of reads mapped per sample to each reference subsys4 (rows)
 
 ALL samples have been mapped to Jean's custom SEED subsys4 reference set (curated from http://www.theseed.org) to generate the counts table. The samples are columns, with the subsys4 features as rows. Note that after subsys4, the functional assignments are hierachrical and overlapping, whereas each subsys4 bin is unique.
+
+For reading into R:
+`d<-read.table("counts.txt", header=T, sep="\t", quote="", check.names=F, row.names=1)`
