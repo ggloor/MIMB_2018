@@ -50,7 +50,7 @@ x.t <- aldex.ttest(x, conds)
 x.all <- data.frame(x.e,x.t, stringsAsFactors=FALSE)
 
 # step 6
-par(mfrow=c(1))
+par(mfrow=c(1,1))
 pdf("effect.plot.pdf", height=5, width=5)
 aldex.plot(x.all)
 dev.off()
