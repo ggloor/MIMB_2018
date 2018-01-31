@@ -7,7 +7,7 @@ library(igraph)
 library(car)
 
 # step 2
-d=read.table("data/count.table.txt", header=T, check.names=F, row.names=1, sep="\t", comment.char="", stringsAsFactors=FALSE, quote='')
+d=read.table("d<-read.table("counts.txt", header=T, sep="\t", quote="", check.names=F, row.names=1)", header=T, check.names=F, row.names=1, sep="\t", comment.char="", stringsAsFactors=FALSE, quote='')
 e=read.table("data/subsys.txt", header=T,  sep="\t", comment.char="", stringsAsFactors=FALSE, quote='')
 
 # step 3
