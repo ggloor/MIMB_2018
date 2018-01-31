@@ -1,38 +1,37 @@
 # step 1
-library(compositions)
-library(zCompositions)
-library(ALDEx2)
-library(CoDaSeq)
-library(igraph)
-library(car)
+library(compositions) # CRAN
+library(zCompositions) # CRAN
+library(ALDEx2) # Bioconductor
+library(CoDaSeq) # https://github.com/ggloor/CoDaSeq
+library(igraph) # CRAN
+library(car) #CRAN
 
 # step 2
-d=read.table("d<-read.table("counts.txt", header=T, sep="\t", quote="", check.names=F, row.names=1)", header=T, check.names=F, row.names=1, sep="\t", comment.char="", stringsAsFactors=FALSE, quote='')
-e=read.table("data/subsys.txt", header=T,  sep="\t", comment.char="", stringsAsFactors=FALSE, quote='')
+d<-read.table("example_data/counts.txt", header=T, sep="\t", quote="", check.names=F, row.names=1)
 
+
+e=read.table("example_data/subsystems2roleNA.txt",   sep="\t", comment.char="", stringsAsFactors=FALSE, quote="")
+colnames(e) <- c("SEED3","SEED1","SEED2","SEED4")
+
+# Exploratory data analysis
 # step 3
-d.g <- data.frame(d[,"010B"], d[,"001B"], d[,"009B"], d[,"012B"], d[,"013A"], d[,"014B"], d[,"017B"], d[,"018B"], check.names=FALSE, stringsAsFactors=FALSE)
-colnames(d.g) <- c("010B", "001B","009B","012B","013A","014B","017B","018B")
-rownames(d.g) <- rownames(d)
+d.f <- codaSeq.filter(d, min.count = 5, samples.by.row=FALSE)
 
 # step 4
-d.f <- codaSeq.filter(d.g, min.count = 5, samples.by.row=FALSE)
-
-# step 5
 d.n0 <- cmultRepl(t(d.f), label=0, method='CZM')
 
-# step 6
+# step 5
 d.clr <- codaSeq.clr(d.n0, samples.by.row=TRUE)
 
-# step 7
+# step 6
 d.pcx <- prcomp(d.clr)
 
-# step 8
+# step 7
 grps=list(c(1:3), c(4:8))
-#pdf("biplot.pdf", height=4, width=7)
+pdf("biplot.pdf", height=4, width=7)
 par(mfrow=c(1,2))
 codaSeq.PCAplot(d.pcx, plot.groups=TRUE, grp=grps, grp.col=c("red", "blue"), plot.circles=FALSE, plot.loadings=TRUE)
-#dev.off()
+dev.off()
 
 # part 1.2
 # step 1
@@ -70,7 +69,7 @@ g <- graph.data.frame(x.lo.phi, directed=FALSE)
 # overview of all the proportional relationships
 # this can take a long time!!!
 V(g)$label.cex <- 1
- plot(g, layout=layout.fruchterman.reingold.grid(g, weight=0.05/E(g)$phi), vertex.size=1, vertex.color="black")
+ #plot(g, layout=layout.fruchterman.reingold.grid(g, weight=0.05/E(g)$phi), vertex.size=1, vertex.color="black")
 
  dg <- decompose.graph(g)
 
@@ -90,5 +89,5 @@ g.df <- g.df.u[order(g.df.u[,"cluster"]),]
 # part 4 stripchart
 pdf("stripchart.pdf", height=7, width=7)
 par(mfrow=c(1,1))
-codaSeq.stripchart(aldex.out=x.all, group.table=e, group.label="SEED1", heir=TRUE, heir.base="SEED4", mar=c(4,22,4,0.5), x.axis="effect", p.cutoff=0.0001, effect.cutoff=2)
+codaSeq.stripchart(aldex.out=x.all, group.table=e, group.label="SEED1", heir=TRUE, heir.base="SEED4", mar=c(4,22,4,0.5), x.axis="effect", sig.method="we.eBH", sig.cutoff=0.01)
 dev.off()
